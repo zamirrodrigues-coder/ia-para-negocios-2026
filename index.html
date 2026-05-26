@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IA Para Negócios 2026 — Na prática: do racional à execução</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --bg:       #08061A;
+  --bg-2:     #0D0B22;
+  --bg-3:     #120F2C;
+  --bg-card:  rgba(255,255,255,0.03);
+
+  /* Brand gradient — pink → magenta → violet (logo) */
+  --pink:     #E8409A;
+  --pink-l:   #FF60B8;
+  --pink-d:   #B82070;
+  --magenta:  #B828A0;
+  --violet:   #7828CC;
+  --violet-l: #9848E8;
+  --violet-d: #5818A0;
+
+  /* Convenience gradient string */
+  --grad: linear-gradient(135deg, #FF5090 0%, #C030A0 45%, #8030D0 100%);
+  --grad-r: linear-gradient(135deg, #8030D0 0%, #C030A0 55%, #FF5090 100%);
+
+  /* Gold — header CTA, authority */
+  --gold:   #E8B828;
+  --gold-l: #F8D050;
+  --gold-d: #C09018;
+
+  /* Coral-orange — right-side glow (logo reference) */
+  --orange: #FF5020;
+
+  /* Text */
+  --text:   #F2EEFF;
+  --text-2: #8A86B0;
+  --text-3: #56527A;
+
+  /* Borders */
+  --bdr-pink:   rgba(232,64,154,0.22);
+  --bdr-violet: rgba(120,40,204,0.25);
+  --bdr-white:  rgba(255,255,255,0.07);
+  --bdr-faint:  rgba(255,255,255,0.04);
+
+  /* Type */
+  --sans:  'Manrope', 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+  /* System */
+  --r:  10px;
+  --r2: 7px;
+  --t:  0.3s ease;
+  --container: 1200px;
+  --py: 96px;
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+section { padding: var(--py) 0; position: relative; }
+
+/* ══════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+══════════════════════════════════════════ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 16px;
+}
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px; height: 1px;
+  background: var(--pink);
+  opacity: 0.55;
+}
+.eyebrow.center { justify-content: center; }
+.eyebrow.center::before { display: none; }
+
+h2 {
+  font-family: var(--sans);
+  font-size: clamp(26px, 3.6vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+h2 em {
+  font-style: normal;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-lead { font-size: 16px; line-height: 1.72; color: var(--text-2); }
+.section-hdr { max-width: 680px; margin-bottom: 52px; }
+.section-hdr.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+.section-rule {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(184,40,160,0.15) 25%,
+    rgba(184,40,160,0.28) 50%, rgba(184,40,160,0.15) 75%, transparent 100%);
+}
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--r2);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all var(--t);
+  white-space: nowrap;
+}
+
+/* Primary — pink/magenta gradient */
+.btn-primary {
+  background: var(--grad);
+  color: #fff;
+  box-shadow: 0 2px 28px rgba(184,40,160,0.38), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(184,40,160,0.55), inset 0 0 0 1px rgba(255,255,255,0.14);
+}
+.btn-primary svg, .btn-primary .arrow { transition: transform var(--t); }
+.btn-primary:hover .arrow { transform: translateX(3px); }
+
+/* Gold — header CTA */
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold-d), var(--gold), var(--gold-l));
+  color: #0D0B22;
+  box-shadow: 0 2px 20px rgba(232,184,40,0.3);
+}
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 32px rgba(232,184,40,0.48);
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid rgba(255,255,255,0.3);
+}
+.btn-outline:hover {
+  border-color: var(--pink);
+  color: var(--pink-l);
+  background: rgba(232,64,154,0.06);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid var(--bdr-white);
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+}
+
+/* ══════════════════════════════════════════
+   LOGO MARK (CSS replica of the IA wordmark)
+══════════════════════════════════════════ */
+.logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-ia {
+  font-family: var(--sans);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(200,40,160,0.4));
+  line-height: 1;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.logo-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+.logo-sub {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0;
+  transition: background var(--t), backdrop-filter var(--t), border-color var(--t);
+  border-bottom: 1px solid transparent;
+}
+.header.scrolled {
+  background: rgba(8,6,26,0.93);
+  backdrop-filter: blur(22px);
+  border-bottom-color: rgba(184,40,160,0.1);
+}
+
+.hdr-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 36px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hdr-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.hdr-date {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+.hdr-venue {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hdr-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+  transition: color var(--t);
+}
+.nav-links a:hover { color: var(--pink-l); }
+.hdr-cta .btn { padding: 10px 22px; font-size: 12px; }
+
+/* ══════════════════════════════════════════
+   HERO — SPLIT LAYOUT
+══════════════════════════════════════════ */
+.hero {
+  min-height: 72vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+  padding-top: 70px; /* header height */
+}
+
+/* LEFT side — content */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 60px 60px 36px;
+  padding-left: max(36px, calc((100vw - 1200px) / 2 + 36px));
+  position: relative;
+  z-index: 2;
+}
+
+/* Subtle left-side glow */
+.hero-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 0% 50%, rgba(120,40,204,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px;
+  background: rgba(184,40,160,0.08);
+  border: 1px solid rgba(184,40,160,0.28);
+  border-radius: 40px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pink-l);
+  margin-bottom: 28px;
+  width: fit-content;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 8px var(--pink);
+  animation: blink 2.2s infinite;
+}
+@keyframes blink {
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.4;transform:scale(.7);}
+}
+
+.hero h1 {
+  font-family: var(--sans);
+  font-size: clamp(22px, 2.5vw, 34px);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+/* Linha 1 da pergunta — setup, branco pleno */
+.h1-opener {
+  display: block;
+  color: rgba(242,238,255,1);
+  font-weight: 700;
+  margin-bottom: 0.06em;
+}
+/* Linha 2 da pergunta — continuação, branco levemente suavizado */
+.h1-body {
+  display: block;
+  color: rgba(242,238,255,0.95);
+}
+/* Linha 3 da pergunta — punchline com destaque */
+.h1-close {
+  display: block;
+  color: rgba(242,238,255,0.95);
+}
+/* Destaque inline — gradiente magenta/roxo sem quebrar linha */
+.hero h1 .h1-accent-inline {
+  font-style: normal;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+/* Bloco pico (fallback para usos anteriores) */
+.hero h1 .accent {
+  display: block;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+.hero-sub-dor {
+  font-size: 15.5px;
+  line-height: 1.58;
+  color: rgba(242,238,255,0.92);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.hero-sub-promessa {
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: rgba(214,210,240,0.7);
+  font-weight: 400;
+}
+.hero-reinforcement {
+  margin-top: 10px;
+  padding-left: 13px;
+  border-left: 2px solid rgba(184,40,160,0.35);
+  font-size: 12.5px;
+  line-height: 1.62;
+  color: rgba(200,196,228,0.48);
+  max-width: 420px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* INFO BAR — pinned to bottom of hero */
+.hero-infobar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(8,6,26,0.85);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--bdr-faint);
+}
+.hero-infobar-inner {
+  display: flex;
+  align-items: stretch;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+.hib-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 32px;
+  font-size: 13.5px;
+  color: var(--text-2);
+  flex: 1;
+  border-right: 1px solid var(--bdr-faint);
+}
+.hib-item:last-child { border-right: none; }
+.hib-item:first-child { padding-left: 0; }
+.hib-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.hib-item strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.hib-item span { font-size: 12px; }
+
+/* RIGHT side — brand visual */
+.hero-right {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-right-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 75% top;
+  display: block;
+  z-index: 0;
+}
+
+/* fade que funde a imagem com o fundo da página */
+.hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #08061A 0%, rgba(8,6,26,0.85) 15%, rgba(8,6,26,0.3) 35%, transparent 60%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Circuit nodes */
+.circuit-nodes {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.cn {
+  position: absolute;
+  border-radius: 50%;
+}
+.cn-1 { width:6px;height:6px; background:rgba(232,64,154,0.5); top:18%;left:12%; box-shadow:0 0 8px rgba(232,64,154,0.6); }
+.cn-2 { width:4px;height:4px; background:rgba(120,40,204,0.6); top:35%;left:65%; box-shadow:0 0 6px rgba(120,40,204,0.7); }
+.cn-3 { width:5px;height:5px; background:rgba(255,80,20,0.5); top:12%;left:80%; box-shadow:0 0 8px rgba(255,80,20,0.6); }
+.cn-4 { width:3px;height:3px; background:rgba(232,64,154,0.4); top:70%;left:25%; }
+.cn-5 { width:4px;height:4px; background:rgba(120,40,204,0.5); top:78%;left:72%; box-shadow:0 0 6px rgba(120,40,204,0.5); }
+.cn-6 { width:6px;height:6px; background:rgba(255,80,20,0.4); top:50%;left:88%; box-shadow:0 0 10px rgba(255,80,20,0.5); }
+.cn-7 { width:3px;height:3px; background:rgba(232,64,154,0.5); top:88%;left:45%; }
+.cn-8 { width:5px;height:5px; background:rgba(100,20,180,0.6); top:25%;left:40%; box-shadow:0 0 8px rgba(100,20,180,0.6); }
+
+/* Circuit lines (decorative) */
+.circuit-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.cl {
+  position: absolute;
+  background: rgba(100,40,200,0.15);
+}
+.cl-h { height: 1px; }
+.cl-v { width: 1px; }
+.cl-1 { width:120px; top:18.2%; left:12.5%; }
+.cl-2 { width:80px; top:35.2%; left:45%; }
+.cl-3 { height:80px; left:65.3%; top:18%; }
+.cl-4 { width:100px; top:50.5%; left:25%; background:rgba(255,80,20,0.12); }
+.cl-5 { height:60px; left:80.3%; top:12%; background:rgba(255,80,20,0.15); }
+.cl-6 { width:90px; top:78.2%; left:25.3%; }
+.cl-7 { height:50px; left:45.3%; top:38%; }
+
+/* The central IA mark */
+.hero-ia-mark {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding-bottom: 70px; /* account for info bar */
+}
+
+.hero-ia-letters {
+  font-family: var(--sans);
+  font-size: clamp(120px, 18vw, 220px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 40px rgba(184,40,160,0.55)) drop-shadow(0 0 80px rgba(120,40,204,0.3));
+  position: relative;
+}
+
+.hero-ia-name {
+  margin-top: 16px;
+  font-size: clamp(18px, 2.8vw, 34px);
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+.hero-ia-name span { color: var(--text-2); font-weight: 400; }
+
+.hero-ia-tagline {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.hero-ia-tagline::before,
+.hero-ia-tagline::after {
+  content: '—';
+  margin: 0 8px;
+  opacity: 0.4;
+}
+
+/* ══════════════════════════════════════════
+   REST OF SECTIONS (reused / updated palette)
+══════════════════════════════════════════ */
+
+/* PROBLEMA */
+#problema { background: var(--bg-2); }
+#problema::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 65% at 90% 50%, rgba(184,40,160,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+.problema-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.problema-quote {
+  padding: 26px 30px;
+  background: rgba(184,40,160,0.04);
+  border: 1px solid rgba(184,40,160,0.16);
+  border-left: 3px solid var(--pink);
+  border-radius: var(--r2);
+  font-family: var(--sans);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text);
+  margin-bottom: 26px;
+}
+.problema-note {
+  padding: 20px 24px;
+  background: rgba(232,64,154,0.04);
+  border: 1px solid rgba(232,64,154,0.14);
+  border-radius: var(--r2);
+  margin-top: 20px;
+}
+.problema-note-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--pink); margin-bottom: 8px;
+}
+.problema-note p { font-size: 13px; line-height: 1.65; color: var(--text-2); }
+
+.problema-items { display: flex; flex-direction: column; gap: 10px; }
+.problema-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--bdr-faint);
+  border-radius: var(--r2);
+  transition: border-color var(--t), background var(--t);
+}
+.problema-item:hover {
+  border-color: rgba(184,40,160,0.18);
+  background: rgba(184,40,160,0.025);
+}
+.pi-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  background: rgba(232,64,154,0.1); border: 1px solid rgba(232,64,154,0.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.pi-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.pi-text span   { font-size: 12.5px; color: var(--text-2); line-height: 1.55; }
+
+.pb-body {
+  font-size: 15px; line-height: 1.72; color: var(--text-2); margin-bottom: 16px;
+}
+.pb-body strong { color: var(--text); font-weight: 600; }
+.pb-impact {
+  padding: 22px 26px;
+  background: rgba(184,40,160,0.05);
+  border: 1px solid rgba(184,40,160,0.22);
+  border-left: 3px solid var(--pink);
+  border-radius: var(--r2);
+  font-family: var(--sans);
+  font-size: 15px; font-weight: 600; line-height: 1.6;
+  color: var(--text);
+  margin: 20px 0 26px;
+  box-shadow: 0 0 20px rgba(184,40,160,0.07);
+}
+.pb-cont p {
+  font-size: 15px; line-height: 1.72; color: var(--text-2); margin-bottom: 12px;
+}
+.pb-cont p:last-child { margin-bottom: 0; }
+.pb-noise {
+  color: var(--text) !important; font-weight: 600 !important;
+}
+
+/* PROPOSTA */
+#proposta { background: var(--bg); }
+.proposta-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.proposta-col { padding: 28px; border-radius: var(--r); }
+.proposta-col.nao { background: rgba(232,64,154,0.03); border: 1px solid rgba(232,64,154,0.1); }
+.proposta-col.sim { background: rgba(120,40,204,0.04); border: 1px solid rgba(120,40,204,0.16); }
+.proposta-col-hdr {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
+  margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--bdr-faint);
+}
+.nao .proposta-col-hdr { color: var(--pink); }
+.sim .proposta-col-hdr { color: var(--violet-l); }
+.prop-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--bdr-faint);
+  font-size: 13px; color: var(--text-2);
+}
+.prop-item:last-child { border-bottom: none; padding-bottom: 0; }
+.prop-item .mk {
+  width: 19px; height: 19px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; flex-shrink: 0;
+}
+.nao .mk { background: rgba(232,64,154,0.14); color: var(--pink); }
+.sim .mk { background: rgba(120,40,204,0.14); color: var(--violet-l); }
+
+/* PIRÂMIDE */
+#piramide { background: var(--bg-3); overflow: hidden; }
+#piramide::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(120,40,204,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgba(184,40,160,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.piramide-layout {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.pyr-visual {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+}
+.pyr-layer {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; height: 64px;
+  cursor: pointer; border-radius: 3px;
+  transition: all var(--t);
+  clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+}
+.pyr-layer:hover { filter: brightness(1.18); }
+
+.pyr-layer:nth-child(1) { width:28%; background:linear-gradient(135deg,rgba(120,40,204,.38),rgba(154,72,232,.58)); border:1px solid rgba(154,72,232,.42); }
+.pyr-layer:nth-child(2) { width:46%; background:linear-gradient(135deg,rgba(100,20,170,.3),rgba(120,40,204,.5)); border:1px solid rgba(120,40,204,.38); }
+.pyr-layer:nth-child(3) { width:63%; background:linear-gradient(135deg,rgba(150,20,130,.25),rgba(185,40,165,.42)); border:1px solid rgba(185,40,165,.3); }
+.pyr-layer:nth-child(4) { width:80%; background:linear-gradient(135deg,rgba(200,30,120,.2),rgba(232,64,154,.35)); border:1px solid rgba(232,64,154,.28); }
+.pyr-layer:nth-child(5) { width:100%; background:linear-gradient(135deg,rgba(184,40,100,.18),rgba(232,64,154,.32)); border:1px solid rgba(232,64,154,.24); }
+
+.pyr-layer.active:nth-child(1){background:linear-gradient(135deg,rgba(120,40,204,.65),rgba(154,72,232,.88));}
+.pyr-layer.active:nth-child(2){background:linear-gradient(135deg,rgba(100,20,170,.55),rgba(120,40,204,.78));}
+.pyr-layer.active:nth-child(3){background:linear-gradient(135deg,rgba(150,20,130,.48),rgba(185,40,165,.72));}
+.pyr-layer.active:nth-child(4){background:linear-gradient(135deg,rgba(200,30,120,.4),rgba(232,64,154,.65));}
+.pyr-layer.active:nth-child(5){background:linear-gradient(135deg,rgba(184,40,100,.38),rgba(232,64,154,.6));}
+
+.pyr-n { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.25); }
+.pyr-lbl { font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.pyr-layer:nth-child(1) .pyr-lbl { color: #B090FF; }
+.pyr-layer:nth-child(5) .pyr-lbl { color: var(--pink-l); }
+
+.pyr-detail { position: relative; }
+.pyr-panel { display: none; animation: fadeUp .28s ease; }
+.pyr-panel.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+
+.pp-number {
+  font-family: var(--sans); font-size: 96px; font-weight: 800; line-height: 1;
+  color: rgba(255,255,255,0.025); position: absolute; top: -24px; right: -8px; user-select: none;
+}
+.pp-meta { font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+.pyr-panel h3 { font-family: var(--sans); font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.22; }
+.pp-desc { font-size: 13.5px; color: var(--text-2); line-height: 1.72; margin-bottom: 20px; }
+.pp-question {
+  padding: 13px 17px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--bdr-white);
+  border-left: 3px solid var(--pink);
+  border-radius: var(--r2);
+  font-size: 13px; color: var(--text-2); margin-bottom: 16px;
+}
+.pp-phrase { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.45; }
+
+.pyr-nav { display: flex; gap: 6px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--bdr-faint); flex-wrap: wrap; }
+.pyr-nav-btn {
+  padding: 7px 13px; border-radius: var(--r2); font-size: 11px; font-weight: 600;
+  background: var(--bg-card); border: 1px solid var(--bdr-white);
+  color: var(--text-2); cursor: pointer; transition: all var(--t); font-family: var(--sans);
+}
+.pyr-nav-btn:hover, .pyr-nav-btn.active {
+  background: rgba(184,40,160,0.1); border-color: rgba(184,40,160,0.32); color: var(--pink-l);
+}
+
+/* JORNADA */
+#jornada { background: var(--bg-2); }
+.day-tabs {
+  display: flex; gap: 4px; padding: 5px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--bdr-faint);
+  border-radius: var(--r); width: fit-content; margin-bottom: 34px;
+}
+.day-tab {
+  padding: 11px 32px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all var(--t); color: var(--text-2);
+  border: none; background: none; font-family: var(--sans);
+}
+.day-tab.active {
+  background: var(--grad); color: #fff;
+  box-shadow: 0 2px 20px rgba(184,40,160,0.35);
+}
+.day-body { display: none; }
+.day-body.active {
+  display: grid; grid-template-columns: 260px 1fr;
+  gap: 44px; animation: fadeUp .28s ease;
+}
+.day-info h3 { font-family: var(--sans); font-size: 23px; font-weight: 700; color: var(--text); margin-bottom: 9px; }
+.day-tag { font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); margin-bottom: 13px; }
+.day-desc { font-size: 13px; line-height: 1.7; color: var(--text-2); }
+.day-layers {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  background: rgba(184,40,160,0.07); border: 1px solid rgba(184,40,160,0.18);
+  border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--pink); margin-top: 16px;
+}
+.day-topics { display: flex; flex-direction: column; gap: 7px; }
+.day-topic {
+  display: flex; gap: 13px; padding: 13px 17px;
+  background: var(--bg-card); border: 1px solid var(--bdr-faint);
+  border-radius: var(--r2); transition: border-color var(--t);
+}
+.day-topic:hover { border-color: rgba(184,40,160,0.14); }
+.dt-num { font-size: 10px; font-weight: 700; color: var(--pink-d); opacity:.6; min-width: 20px; padding-top: 1px; }
+.dt-txt { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+
+/* PÚBLICO */
+#publico { background: var(--bg); }
+.publico-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 32px; }
+.pub-card {
+  padding: 18px 15px; background: var(--bg-card);
+  border: 1px solid var(--bdr-faint); border-radius: var(--r2);
+  text-align: center; transition: all var(--t);
+}
+.pub-card:hover { border-color: rgba(184,40,160,0.16); background: rgba(184,40,160,0.025); transform: translateY(-2px); }
+.pub-ico { font-size: 20px; margin-bottom: 8px; }
+.pub-role { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.pub-sub  { font-size: 11px; color: var(--text-3); }
+.publico-callout {
+  padding: 28px 38px; background: rgba(184,40,160,0.03);
+  border: 1px solid rgba(184,40,160,0.12); border-radius: var(--r); text-align: center;
+}
+.publico-callout p {
+  font-family: var(--sans); font-size: 18px;
+  line-height: 1.55; color: var(--text); max-width: 700px; margin: 0 auto;
+}
+
+/* APRENDIZADOS */
+#aprendizados { background: var(--bg-2); }
+#aprendizados::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 55% 50% at 85% 50%, rgba(120,40,204,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+.apr-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.apr-card {
+  padding: 24px 20px; background: var(--bg-card);
+  border: 1px solid var(--bdr-faint); border-radius: var(--r);
+  transition: all var(--t); position: relative; overflow: hidden;
+}
+.apr-card::after {
+  content:''; position:absolute; top:0;left:0;right:0;height:2px;
+  background: var(--grad); opacity:0; transition: opacity var(--t);
+}
+.apr-card:hover { border-color: rgba(184,40,160,0.14); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0,0,0,.4); }
+.apr-card:hover::after { opacity:1; }
+.apr-n { font-size: 10px; font-weight: 700; color: var(--pink-d); letter-spacing: .1em; margin-bottom: 9px; opacity:.65; }
+.apr-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.35; }
+.apr-card p  { font-size: 12.5px; color: var(--text-2); line-height: 1.68; }
+
+/* CONVIDADOS */
+#convidados { background: var(--bg-3); }
+.curation-box {
+  padding: 26px 30px; background: rgba(120,40,204,0.04);
+  border: 1px solid rgba(120,40,204,0.14); border-radius: var(--r); margin-bottom: 40px;
+}
+.curation-lbl { font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: var(--violet-l); margin-bottom: 9px; }
+.curation-box p { font-size: 13.5px; line-height: 1.7; color: var(--text-2); }
+.crit-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 16px; }
+.crit-tag {
+  padding: 4px 12px; background: rgba(120,40,204,0.07);
+  border: 1px solid rgba(120,40,204,0.2); border-radius: 20px;
+  font-size: 11px; color: var(--violet-l); font-weight: 500;
+}
+.speakers-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.spk-ph {
+  padding: 26px 16px; background: var(--bg-card);
+  border: 1px solid var(--bdr-faint); border-radius: var(--r);
+  text-align: center; transition: all var(--t);
+}
+.spk-ph:hover { border-color: rgba(184,40,160,0.14); transform: translateY(-2px); }
+.spk-avatar {
+  width: 66px; height: 66px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(120,40,204,.2), rgba(184,40,160,.2));
+  border: 1px dashed rgba(184,40,160,0.2);
+  margin: 0 auto 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--text-3);
+}
+.spk-name { font-size: 12px; font-weight: 600; color: var(--text-3); margin-bottom: 3px; }
+.spk-tag  { font-size: 10px; color: var(--text-3); opacity:.5; letter-spacing:.05em; }
+
+/* ENTREGÁVEL */
+#entregavel { background: var(--bg-2); }
+.entregavel-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+.entregavel-items { display: flex; flex-direction: column; gap: 9px; margin-top: 20px; }
+.ent-item {
+  display: flex; gap: 13px; align-items: flex-start;
+  padding: 14px 16px; background: var(--bg-card);
+  border: 1px solid var(--bdr-faint); border-radius: var(--r2);
+}
+.ent-step {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(184,40,160,0.09); border: 1px solid rgba(184,40,160,0.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10.5px; font-weight: 700; color: var(--pink); flex-shrink: 0;
+}
+.ent-item-txt strong { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 1px; }
+.ent-item-txt span   { font-size: 12px; color: var(--text-2); line-height: 1.55; }
+.ent-doc {
+  padding: 34px; background: rgba(255,255,255,0.018);
+  border: 1px solid rgba(184,40,160,0.2); border-radius: var(--r);
+  box-shadow: 0 0 50px rgba(184,40,160,0.05), 0 12px 40px rgba(0,0,0,.45);
+  position: relative; overflow: hidden;
+}
+.ent-doc::before {
+  content:''; position:absolute; top:0;left:0;right:0;height:3px;
+  background: var(--grad);
+}
+.ent-doc-hdr { display: flex; align-items: center; gap: 13px; padding-bottom: 20px; border-bottom: 1px solid var(--bdr-faint); margin-bottom: 22px; }
+.ent-doc-ico {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--grad); display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.ent-doc-title { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.ent-doc-sub   { font-size: 11px; color: var(--text-3); }
+.ent-bars { display: flex; flex-direction: column; gap: 13px; }
+.ent-bar-row { display: flex; flex-direction: column; gap: 5px; }
+.ent-bar-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-2); }
+.ent-bar-meta span:last-child { color: var(--pink-l); font-weight: 600; }
+.ent-bar-track { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+.ent-bar-fill  { height: 100%; border-radius: 2px; background: var(--grad); }
+
+/* ══════════════════════════════════════════
+   MANIFESTO — REDESIGN
+══════════════════════════════════════════ */
+#manifesto { background: var(--bg-3); overflow: hidden; position: relative; }
+#manifesto::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(120,40,204,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 100%, rgba(184,40,160,0.06) 0%, transparent 55%);
+  pointer-events: none;
+}
+.mf-wrap { max-width: 860px; margin: 0 auto; padding: 100px 36px; position: relative; }
+
+/* 1. Label */
+.mf-label {
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 36px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.mf-label::before {
+  content: ''; display: block; width: 28px; height: 2px;
+  background: var(--pink); border-radius: 2px;
+}
+
+/* 2. Headline */
+.mf-headline-block {
+  border-left: 3px solid var(--pink);
+  padding-left: 28px; margin-bottom: 56px;
+}
+.mf-h2 {
+  font-family: var(--sans); font-size: clamp(20px,2.4vw,30px);
+  font-weight: 700; color: #fff; line-height: 1.2;
+  letter-spacing: -0.02em; margin-bottom: 14px;
+}
+.mf-subhead {
+  font-family: var(--sans); font-size: clamp(20px,2.4vw,30px);
+  font-weight: 700; color: #fff; line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* 3. Context */
+.mf-context { max-width: 680px; margin-bottom: 48px; }
+.mf-context p {
+  font-family: var(--sans); font-size: 17px; line-height: 1.72;
+  color: rgba(214,210,240,0.85); margin-bottom: 16px;
+}
+.mf-context p:last-child { margin-bottom: 0; }
+.mf-question {
+  font-family: var(--sans) !important; font-size: 20px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+
+/* 4. Tension */
+.mf-tension {
+  background: rgba(100,30,180,0.08);
+  border-left: 3px solid rgba(130,50,210,0.45);
+  padding: 28px 32px; border-radius: 0 var(--r2) var(--r2) 0;
+  max-width: 700px; margin-bottom: 56px;
+}
+.mf-tension-lead {
+  font-family: var(--sans); font-size: 18px; line-height: 1.6;
+  color: #fff; font-weight: 700; margin-bottom: 14px;
+}
+.mf-tension-body {
+  font-family: var(--sans); font-size: 16px; line-height: 1.72;
+  color: rgba(200,196,228,0.75); margin: 0;
+}
+
+/* 5. Examples */
+.mf-examples { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 64px; }
+.mf-ex {
+  padding: 22px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-top: 2px solid rgba(184,40,160,0.3);
+  border-radius: var(--r2);
+}
+.mf-ex-title {
+  font-family: var(--sans); font-size: 12.5px; font-weight: 700;
+  color: rgba(210,80,175,0.9); letter-spacing: 0.01em;
+  margin-bottom: 10px; line-height: 1.35;
+  text-transform: uppercase;
+}
+.mf-ex p {
+  font-family: var(--sans); font-size: 14.5px; line-height: 1.68;
+  color: rgba(200,196,228,0.75); margin: 0;
+}
+
+/* 6. Central question */
+.mf-central-q {
+  max-width: 640px; margin: 0 auto 64px; text-align: center; padding: 0 20px;
+}
+.mf-central-q p {
+  font-family: var(--sans); font-size: clamp(17px,2vw,24px);
+  font-weight: 700; line-height: 1.35; color: #fff;
+}
+
+/* 7. Thesis */
+.mf-tese-block { max-width: 660px; margin: 0 auto 56px; text-align: center; }
+.mf-tese-block p {
+  font-family: var(--sans); font-size: 17px; line-height: 1.72;
+  color: rgba(214,210,240,0.8); margin-bottom: 14px;
+}
+.mf-tese-bold {
+  font-weight: 700 !important; font-size: 18px !important;
+  color: rgba(232,228,248,0.95) !important;
+}
+
+/* 8. Close */
+.mf-close {
+  max-width: 820px; margin: 0 auto; text-align: center;
+  padding: 44px 48px;
+  background: rgba(184,40,160,0.05);
+  border: 1px solid rgba(184,40,160,0.22);
+  border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center; gap: 0;
+}
+.mf-close-dim, .mf-close-strong {
+  font-family: var(--sans); font-size: clamp(17px,2.2vw,24px);
+  font-weight: 700; line-height: 1.3; margin: 0; flex: 1; text-align: center;
+}
+.mf-close-dim { color: rgba(232,228,248,0.65); }
+.mf-close-strong { color: #fff; border-left: 1px solid rgba(184,40,160,0.3); padding-left: 32px; margin-left: 32px; }
+.mf-gradient {
+  background: var(--grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+@media (max-width: 700px) {
+  .mf-examples { grid-template-columns: 1fr; }
+  .mf-headline-block { padding-left: 18px; }
+  .mf-wrap { padding: 72px 20px; }
+  .mf-close { flex-direction: column; gap: 24px; }
+  .mf-close-strong { border-left: none; padding-left: 0; margin-left: 0; border-top: 1px solid rgba(184,40,160,0.3); padding-top: 24px; }
+}
+
+/* ══════════════════════════════════════════
+   PASSAPORTES
+══════════════════════════════════════════ */
+#passaportes {
+  background: #060413;
+  padding: 100px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+#passaportes::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120,40,204,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(60,80,220,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 85% 80%, rgba(184,40,160,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.pass-header { text-align: center; margin-bottom: 56px; }
+.pass-title {
+  font-family: var(--sans); font-size: clamp(32px,5vw,64px); font-weight: 900;
+  letter-spacing: -0.02em; color: #fff; text-transform: uppercase;
+  line-height: 1.05; margin-bottom: 20px;
+}
+.pass-gradient { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.pass-brand { display: inline-flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.pass-ia { font-size: 30px; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+.pass-brand-name { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.2; text-align: left; }
+.pass-brand-tag { font-size: 11.5px; color: rgba(214,210,240,0.55); letter-spacing: 0.04em; }
+.pass-limited {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.22em;
+  color: rgba(214,210,240,0.45); text-transform: uppercase;
+}
+.pass-limited span { display: block; width: 32px; height: 1px; background: rgba(214,210,240,0.25); }
+.pass-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 14px; align-items: stretch; margin-bottom: 48px;
+}
+.pass-card {
+  border-radius: 14px; padding: 24px 18px;
+  display: flex; flex-direction: column;
+  position: relative; background: rgba(255,255,255,0.025);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.pass-card:hover { transform: translateY(-5px); }
+.pass-type {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(200,196,228,0.4); margin-bottom: 4px;
+}
+.pass-name {
+  font-family: var(--sans); font-size: clamp(20px,2.2vw,28px);
+  font-weight: 900; letter-spacing: -0.01em; line-height: 1; margin-bottom: 8px;
+}
+.pass-sub {
+  font-size: 12px; line-height: 1.45; color: rgba(200,196,228,0.55);
+  margin-bottom: 18px; min-height: 34px;
+}
+.pass-badge {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 5px 14px;
+  border-radius: 20px; white-space: nowrap;
+}
+.badge-escolhido { background: var(--grad); color: #fff; }
+.badge-premium { background: linear-gradient(135deg,#c8950a,#f0c040,#c8950a); color: #1a0800; }
+.pass-list { flex: 1; margin-bottom: 18px; border-top: 1px solid rgba(255,255,255,0.06); }
+.pi {
+  display: flex; align-items: center; min-height: 34px;
+  padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 7px;
+}
+.pi-n { font-size: 9.5px; font-weight: 600; color: rgba(200,196,228,0.22); min-width: 14px; flex-shrink: 0; }
+.pi-t { font-size: 12px; line-height: 1.3; color: rgba(214,210,240,0.78); flex: 1; }
+.pi-ck { font-size: 12px; font-weight: 900; flex-shrink: 0; margin-left: auto; padding-left: 4px; }
+/* ── Price box: componente base — 1 estrutura, 4 instâncias ── */
+.pass-price {
+  border-radius: 12px;
+  padding: 14px 14px 12px;
+  margin-top: auto;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; box-sizing: border-box;
+}
+.pp-inst-lbl {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em;
+  color: rgba(232,228,255,0.85); text-transform: uppercase;
+  line-height: 1.3; margin-bottom: 10px;
+}
+.pp-monthly {
+  font-size: 10px; font-weight: 700; color: rgba(200,196,228,0.44);
+  letter-spacing: 0.06em; margin-bottom: 0px;
+}
+.pp-inst {
+  font-family: var(--sans); font-size: clamp(26px,2.6vw,36px);
+  font-weight: 900; line-height: 1.05; white-space: nowrap; margin-bottom: 6px;
+}
+.pp-cash {
+  font-size: 11.5px; color: rgba(200,196,228,0.46);
+  white-space: nowrap; margin-bottom: 12px;
+}
+.pp-btn {
+  display: block;
+  width: 100%; height: 40px; line-height: 40px;
+  padding: 0 6px; box-sizing: border-box;
+  border-radius: 8px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; text-decoration: none; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.pp-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+/* Online */
+.pc-online { border: 1px solid rgba(80,120,255,0.35); box-shadow: 0 0 30px rgba(60,100,255,0.06),inset 0 1px 0 rgba(255,255,255,0.05); }
+.pc-online:hover { box-shadow: 0 0 50px rgba(60,100,255,0.15); }
+.pc-online .pass-name { color: #7090ff; }
+.pc-online .pi-ck { color: #7090ff; }
+.pc-online .pass-price { background: rgba(60,100,255,0.08); border: 1px solid rgba(80,120,255,0.2); }
+.pc-online .pp-inst { color: #7090ff; }
+.pc-online .pp-btn { background: rgba(60,100,255,0.88); color: #fff; }
+/* Presencial */
+.pc-presencial { border: 1px solid rgba(184,40,160,0.4); box-shadow: 0 0 30px rgba(184,40,160,0.07),inset 0 1px 0 rgba(255,255,255,0.05); }
+.pc-presencial:hover { box-shadow: 0 0 50px rgba(184,40,160,0.18); }
+.pc-presencial .pass-name { color: var(--pink-l); }
+.pc-presencial .pi-ck { color: var(--pink-l); }
+.pc-presencial .pass-price { background: rgba(184,40,160,0.08); border: 1px solid rgba(184,40,160,0.25); }
+.pc-presencial .pp-inst { color: var(--pink-l); }
+.pc-presencial .pp-btn { background: var(--pink); color: #fff; }
+/* Imersão */
+.pc-imersao { border: 1.5px solid rgba(255,60,160,0.65); background: rgba(255,60,160,0.03); box-shadow: 0 0 40px rgba(255,60,160,0.1),inset 0 1px 0 rgba(255,255,255,0.08); transform: scale(1.015); margin-top: -8px; }
+.pc-imersao:hover { transform: scale(1.015) translateY(-5px); box-shadow: 0 0 65px rgba(255,60,160,0.22); }
+.pc-imersao .pass-name { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.pc-imersao .pi-ck { color: #ff4fa0; }
+.pc-imersao .pass-price { background: rgba(255,60,160,0.1); border: 1px solid rgba(255,60,160,0.3); }
+.pc-imersao .pp-inst { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.pc-imersao .pp-btn { background: linear-gradient(135deg,var(--pink),#c030a0); color: #fff; box-shadow: 0 4px 20px rgba(255,60,160,0.35); }
+/* Executive */
+.pc-executive { border: 1px solid rgba(200,149,10,0.45); background: rgba(180,120,0,0.04); box-shadow: 0 0 30px rgba(200,149,10,0.08),inset 0 1px 0 rgba(255,215,80,0.07); }
+.pc-executive:hover { box-shadow: 0 0 55px rgba(200,149,10,0.18); }
+.pc-executive .pass-type { color: rgba(200,165,80,0.55); }
+.pc-executive .pass-name { color: #e8b830; }
+.pc-executive .pi-ck { color: #e8b830; }
+.pc-executive .pass-price { background: rgba(180,130,0,0.12); border: 1px solid rgba(200,149,10,0.3); }
+.pc-executive .pp-inst { color: #e8b830; }
+.pc-executive .pp-btn { background: linear-gradient(135deg,#c8950a,#f0c040,#c8950a); color: #1a0800; font-weight: 900; }
+/* Trust */
+.pass-trust { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06); }
+.pt-item { display: flex; align-items: center; gap: 10px; }
+.pt-icon { font-size: 22px; }
+.pt-item strong { display: block; font-size: 13px; font-weight: 700; color: rgba(232,228,248,0.9); line-height: 1.2; }
+.pt-item span { display: block; font-size: 11.5px; color: rgba(200,196,228,0.5); }
+@media (max-width: 900px) {
+  .pass-grid { grid-template-columns: repeat(2,1fr); }
+  .pc-imersao { transform: none; margin-top: 0; }
+  .pc-imersao:hover { transform: translateY(-5px); }
+}
+@media (max-width: 520px) {
+  .pass-grid { grid-template-columns: 1fr; }
+  .pass-trust { gap: 20px; }
+}
+
+/* CTA FINAL */
+#cta-final { background: var(--bg); text-align: center; padding: 120px 0; }
+#cta-final::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse 65% 75% at 50% 50%, rgba(184,40,160,0.055) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-inner { max-width: 580px; margin: 0 auto; position: relative; }
+.cta-inner p { font-size: 16px; line-height: 1.68; color: var(--text-2); margin-bottom: 38px; }
+.cta-actions { display: flex; flex-direction: column; align-items: center; gap: 13px; }
+.cta-actions .btn { min-width: 280px; justify-content: center; padding: 17px 32px; font-size: 15px; }
+.cta-footnote { margin-top: 20px; font-size: 11px; color: var(--text-3); }
+
+/* FOOTER */
+.footer { padding: 34px 0; background: #060413; border-top: 1px solid var(--bdr-faint); }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 13px; }
+.footer-copy { font-size: 12px; color: var(--text-3); }
+.footer-logo { height: 36px; width: auto; display: block; }
+.footer-ibn { display: flex; justify-content: center; align-items: center; }
+.footer-ibn img { height: 32px; width: auto; display: block; opacity: 0.75; transition: opacity 0.2s; }
+.footer-ibn img:hover { opacity: 1; }
+.logo-img { height: 56px; width: auto; display: block; }
+.footer-enky { font-size: 13.5px; font-weight: 500; color: var(--text-2); letter-spacing: 0.01em; }
+.footer-enky a { color: var(--pink); font-weight: 700; transition: opacity var(--t); }
+.footer-enky a:hover { opacity: .75; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-left { padding: 100px 36px 80px; }
+  .hero-right { height: 50vw; min-height: 320px; }
+  .piramide-layout { grid-template-columns: 1fr; }
+  .piramide-layout .pyr-visual { order: 2; }
+  .piramide-layout .pyr-detail { order: 1; }
+  .problema-grid { grid-template-columns: 1fr; }
+  .proposta-cols { grid-template-columns: 1fr; }
+  .entregavel-wrap { grid-template-columns: 1fr; }
+  .day-body.active { grid-template-columns: 1fr; }
+  .publico-grid { grid-template-columns: repeat(2,1fr); }
+  .speakers-grid { grid-template-columns: repeat(2,1fr); }
+  .apr-grid { grid-template-columns: repeat(2,1fr); }
+  .hdr-center { display: none; }
+}
+
+@media (max-width: 768px) {
+  :root { --py: 64px; }
+  .nav-links { display: none; }
+  .hero-ia-letters { font-size: 100px; }
+  .pyr-layer { height: 50px; }
+  .pyr-lbl { font-size: 11px; }
+  .pyr-layer:nth-child(1){width:34%;}
+  .pyr-layer:nth-child(2){width:52%;}
+  .pyr-layer:nth-child(3){width:68%;}
+  .hero-infobar-inner { flex-direction: column; }
+  .hib-item { border-right: none; border-bottom: 1px solid var(--bdr-faint); padding: 14px 0; }
+  .hib-item:last-child { border-bottom: none; }
+}
+
+@media (max-width: 560px) {
+  .container { padding: 0 20px; }
+  .hdr-bar { padding: 12px 20px; }
+  .hero-left { padding: 90px 20px 60px; }
+  .hero-actions { flex-direction: column; width: 100%; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  .publico-grid { grid-template-columns: 1fr 1fr; }
+  .speakers-grid { grid-template-columns: 1fr 1fr; }
+  .apr-grid { grid-template-columns: 1fr; }
+  .day-tabs { width: 100%; }
+  .day-tab { flex: 1; text-align: center; padding: 10px 16px; }
+}
+
+  </style>
+</head>
+<body>
+
+<!-- ░░ HEADER ░░ -->
+<header class="header" id="hdr">
+  <div class="hdr-bar">
+
+    <!-- Logo -->
+    <div class="logo-mark">
+      <img src="ia-para-negocios2.png" alt="IA Para Negócios" class="logo-img">
+    </div>
+
+    <!-- Center info -->
+    <div class="hdr-center">
+      <div class="hdr-venue">Primeira edição</div>
+    </div>
+
+    <!-- Nav + CTA -->
+    <div class="hdr-right">
+      <ul class="nav-links">
+        <li><a href="#problema">O Desafio</a></li>
+        <li><a href="#piramide">Metodologia</a></li>
+        <li><a href="#jornada">Programação</a></li>
+        <li><a href="#convidados">Convidados</a></li>
+      </ul>
+      <div class="hdr-cta">
+        <a href="#cta-final" class="btn btn-gold">Comprar ingresso</a>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ░░ HERO — split layout ░░ -->
+<section class="hero" id="inicio">
+
+  <!-- LEFT: content -->
+  <div class="hero-left">
+
+    <div class="hero-badge">
+      Primeira Edição &nbsp;·&nbsp; Porto Alegre &nbsp;·&nbsp; 2 dias
+    </div>
+
+    <h1>
+      <span class="h1-opener">A IA está acelerando seu</span>
+      <span class="h1-body">time ou também escondendo</span>
+      <span class="h1-close"><em class="h1-accent-inline">fragilidade na operação?</em></span>
+    </h1>
+
+    <div class="hero-sub">
+      <p class="hero-sub-promessa">Sem método, a IA acelera a execução, mas abre vulnerabilidades e mantém o time operando sem raciocínio comum e sem inteligência operacional.</p>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#passaportes" class="btn btn-primary">
+        Garantir meu ingresso <span class="arrow">→</span>
+      </a>
+      <a href="#piramide" class="btn btn-outline">Ver metodologia</a>
+    </div>
+
+    <p class="hero-reinforcement">Dois dias com líderes e empresas de referência que estão aplicando inteligência artificial na prática para transformar o uso disperso em eficiência real.</p>
+
+  </div>
+
+  <!-- RIGHT: brand visual -->
+  <div class="hero-right">
+    <img src="hero-img3.png" alt="" class="hero-right-img">
+  </div>
+
+  <!-- INFO BAR -->
+  <div class="hero-infobar">
+    <div class="hero-infobar-inner">
+      <div class="hib-item">
+        <span class="hib-icon">📅</span>
+        <div>
+          <strong>Agosto 2026 · Porto Alegre</strong>
+          <span>Dia a confirmar</span>
+        </div>
+      </div>
+      <div class="hib-item">
+        <span class="hib-icon">📍</span>
+        <div>
+          <strong>Porto Alegre, RS</strong>
+          <span>Sede do IBN Life</span>
+        </div>
+      </div>
+      <div class="hib-item">
+        <span class="hib-icon">👥</span>
+        <div>
+          <strong>Convidados selecionados</strong>
+          <span>Curadoria por experiência aplicada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ PROBLEMA ░░ -->
+<section id="problema">
+  <div class="container">
+    <div class="problema-grid">
+      <div>
+        <span class="eyebrow">O desafio de mercado</span>
+        <h2>O desafio não é só usar IA.<br><em>É fazer o time pensar melhor com IA.</em></h2>
+        <p class="pb-body">Hoje, cada pessoa pode usar IA para escrever, criar, automatizar, analisar, decidir e executar.</p>
+        <p class="pb-body"><strong>Mas, se cada um usa com seu próprio critério, seu próprio contexto e sua própria lógica, a empresa não ganha inteligência operacional.</strong><br>Ela ganha velocidade individual.</p>
+        <div class="pb-impact">A IA está acelerando o racional que a empresa definiu ou apenas multiplicando decisões desconectadas?</div>
+        <div class="pb-cont">
+          <p>Quando a IA opera com contexto, método e governança, ela ajuda o time a decidir melhor, executar com mais consistência e caminhar na mesma direção.</p>
+          <p>Quando opera sem isso, ela apenas acelera tarefas.</p>
+          <p class="pb-noise">E tarefas aceleradas sem racional comum não viram eficiência.<br>Viram ruído operacional.</p>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">O que está acontecendo nas empresas</span>
+        <div class="problema-items">
+          <div class="problema-item">
+            <div class="pi-text"><strong>Racional individual</strong><span>Cada pessoa usa IA com seu próprio critério, repertório e entendimento do problema.</span></div>
+          </div>
+          <div class="problema-item">
+            <div class="pi-text"><strong>Contexto desalinhado</strong><span>A IA responde com base no prompt de cada um, não no conhecimento, nas prioridades e nos padrões definidos pela empresa.</span></div>
+          </div>
+          <div class="problema-item">
+            <div class="pi-text"><strong>Execução sem padrão</strong><span>As entregas aumentam, mas não seguem a mesma lógica de qualidade, validação e decisão.</span></div>
+          </div>
+          <div class="problema-item">
+            <div class="pi-text"><strong>Controle sem inteligência operacional</strong><span>O gestor cria sistemas e automações, mas o time continua apenas executando tarefas sem entender o racional por trás.</span></div>
+          </div>
+          <div class="problema-item">
+            <div class="pi-text"><strong>Velocidade sem aprendizado coletivo</strong><span>A empresa produz mais, mas não necessariamente aprende, documenta, melhora ou calibra sua forma de decidir.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ PROPOSTA ░░ -->
+<section id="proposta">
+  <div class="container">
+    <div class="section-hdr center">
+      <span class="eyebrow center">A diferença</span>
+      <h2>Este não é mais um evento sobre <em>promessas de IA.</em></h2>
+      <p class="section-lead">É uma jornada para entender como aplicar inteligência artificial com método, governança e eficiência real, para quem precisa sair do discurso e implementar dentro da operação.</p>
+    </div>
+    <div class="proposta-cols">
+      <div class="proposta-col nao">
+        <div class="proposta-col-hdr">O que este evento não é</div>
+        <div class="prop-item"><span class="mk">✕</span> Evento de celebridade de IA</div>
+        <div class="prop-item"><span class="mk">✕</span> Palestra genérica sobre o futuro</div>
+        <div class="prop-item"><span class="mk">✕</span> Vitrine de ferramentas e demos</div>
+        <div class="prop-item"><span class="mk">✕</span> Conteúdo técnico para devs</div>
+        <div class="prop-item"><span class="mk">✕</span> Discurso motivacional de LinkedIn</div>
+        <div class="prop-item"><span class="mk">✕</span> Hype sobre revolução da IA</div>
+        <div class="prop-item"><span class="mk">✕</span> Promessas sem método</div>
+      </div>
+      <div class="proposta-col sim">
+        <div class="proposta-col-hdr">O que você vai encontrar</div>
+        <div class="prop-item"><span class="mk">✓</span> Jornada metodológica em dois dias</div>
+        <div class="prop-item"><span class="mk">✓</span> Líderes que aplicaram IA em processos reais</div>
+        <div class="prop-item"><span class="mk">✓</span> Curadoria por experiência aplicada, não fama</div>
+        <div class="prop-item"><span class="mk">✓</span> Método para criar governança e critérios</div>
+        <div class="prop-item"><span class="mk">✓</span> Maturidade operacional como pauta central</div>
+        <div class="prop-item"><span class="mk">✓</span> Entregável prático para aplicar segunda-feira</div>
+        <div class="prop-item"><span class="mk">✓</span> Profundidade executiva, sem exagero</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ PIRÂMIDE ░░ -->
+<section id="piramide">
+  <div class="container">
+    <div class="section-hdr">
+      <span class="eyebrow">Metodologia central</span>
+      <h2>A <em>Pirâmide da IA Operacional</em></h2>
+      <p class="section-lead">A maior parte das empresas começa perguntando qual ferramenta usar. A pirâmide propõe o contrário: a ferramenta é consequência de quatro camadas anteriores de maturidade.</p>
+    </div>
+    <div class="piramide-layout">
+      <div class="pyr-visual" id="pyrVis">
+        <div class="pyr-layer active" data-panel="5" role="button" tabindex="0"><span class="pyr-n">05</span><span class="pyr-lbl">IA Aplicada</span></div>
+        <div class="pyr-layer" data-panel="4" role="button" tabindex="0"><span class="pyr-n">04</span><span class="pyr-lbl">Como Fazer</span></div>
+        <div class="pyr-layer" data-panel="3" role="button" tabindex="0"><span class="pyr-n">03</span><span class="pyr-lbl">O Que Fazer</span></div>
+        <div class="pyr-layer" data-panel="2" role="button" tabindex="0"><span class="pyr-n">02</span><span class="pyr-lbl">Identificação do Problema</span></div>
+        <div class="pyr-layer" data-panel="1" role="button" tabindex="0"><span class="pyr-n">01</span><span class="pyr-lbl">Racional do Time</span></div>
+      </div>
+      <div class="pyr-detail">
+        <div class="pyr-panel active" id="panel-5">
+          <div class="pp-number">05</div>
+          <div class="pp-meta">Camada 5: Topo da pirâmide</div>
+          <h3>IA Aplicada</h3>
+          <p class="pp-desc">Modelos, agentes, copilotos, automações e integrações escolhidos com base no racional construído nas camadas anteriores. A IA fica no topo porque deve ser consequência da maturidade, não o ponto de partida.</p>
+          <div class="pp-question">Qual IA deve ser usada dentro deste racional, deste processo e desta governança?</div>
+          <p class="pp-phrase">A IA certa não é a mais poderosa. É a que opera melhor dentro do sistema da empresa.</p>
+        </div>
+        <div class="pyr-panel" id="panel-4">
+          <div class="pp-number">04</div>
+          <div class="pp-meta">Camada 4</div>
+          <h3>Como Fazer</h3>
+          <p class="pp-desc">Frameworks, trilhas, processos, governança, critérios, auditoria e execução. Com método, a empresa cria uma linguagem comum, processos auditáveis e um caminho de adoção sustentável.</p>
+          <div class="pp-question">Como garantimos que todos usem IA dentro do mesmo racional operacional?</div>
+          <p class="pp-phrase">Sem método, IA vira uso individual. Com governança, vira inteligência operacional.</p>
+        </div>
+        <div class="pyr-panel" id="panel-3">
+          <div class="pp-number">03</div>
+          <div class="pp-meta">Camada 3</div>
+          <h3>O Que Fazer</h3>
+          <p class="pp-desc">Prioridades, oportunidades, limites, decisões humanas, automações possíveis e objetivos. Maturidade em IA não é usar IA em tudo: é saber onde acelerar, onde apoiar e onde manter decisão humana.</p>
+          <div class="pp-question">O que vamos acelerar, por quê e com quais limites?</div>
+          <p class="pp-phrase">Maturidade em IA não é usar IA em tudo. É saber onde acelerar com controle.</p>
+        </div>
+        <div class="pyr-panel" id="panel-2">
+          <div class="pp-number">02</div>
+          <div class="pp-meta">Camada 2</div>
+          <h3>Identificação do Problema</h3>
+          <p class="pp-desc">Gargalos, riscos, retrabalho, ineficiências, falhas de comunicação e impacto sistêmico. Um desafio mal definido não se resolve com IA, se acelera. Um processo confuso acelerado vira caos em escala.</p>
+          <div class="pp-question">Qual problema real queremos resolver e quais novos problemas podemos criar ao acelerar?</div>
+          <p class="pp-phrase">IA não resolve problema mal definido. Ela acelera o que já existe.</p>
+        </div>
+        <div class="pyr-panel" id="panel-1">
+          <div class="pp-number">01</div>
+          <div class="pp-meta">Camada 1: Base da pirâmide</div>
+          <h3>Racional do Time</h3>
+          <p class="pp-desc">Mentalidade, pensamento crítico, cultura, autonomia e critérios comuns de decisão. Uma empresa pode liberar IA para todos e ainda assim não ter maturidade. Sem padrão e sem entendimento comum, o ganho individual gera inconsistência coletiva.</p>
+          <div class="pp-question">Meu time está preparado para usar IA com critério ou apenas com velocidade?</div>
+          <p class="pp-phrase">Antes de acelerar a execução, é preciso calibrar o raciocínio.</p>
+        </div>
+        <div class="pyr-nav">
+          <button class="pyr-nav-btn" data-t="1">Base</button>
+          <button class="pyr-nav-btn" data-t="2">Problema</button>
+          <button class="pyr-nav-btn" data-t="3">O Que</button>
+          <button class="pyr-nav-btn" data-t="4">Como</button>
+          <button class="pyr-nav-btn active" data-t="5">IA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ JORNADA ░░ -->
+<section id="jornada">
+  <div class="container">
+    <div class="section-hdr">
+      <span class="eyebrow">Programação</span>
+      <h2>Uma jornada, não uma<br><em>sequência de palestras.</em></h2>
+      <p class="section-lead">O evento é estruturado para que o participante percorra a pirâmide, partindo de diagnóstico e chegando à aplicação real em dois dias.</p>
+    </div>
+    <div class="day-tabs">
+      <button class="day-tab active" data-day="1">Dia 1: Diagnóstico</button>
+      <button class="day-tab" data-day="2">Dia 2: Aplicação</button>
+    </div>
+    <div class="day-body active" id="day-1">
+      <div class="day-info">
+        <div class="day-tag">Camadas 1 · 2 · 3</div>
+        <h3>Pensar, diagnosticar e priorizar.</h3>
+        <p class="day-desc">O primeiro dia provoca clareza. IA não começa com ferramenta: começa com diagnóstico, cultura, pensamento crítico e prioridades reais.</p>
+        <div class="day-layers">Racional · Desafio · O que fazer</div>
+      </div>
+      <div class="day-topics">
+        <div class="day-topic"><span class="dt-num">01</span><span class="dt-txt">Por que IA sem racional comum cria desorganização sistêmica</span></div>
+        <div class="day-topic"><span class="dt-num">02</span><span class="dt-txt">O que empresas maduras fazem antes de liberar IA para os times</span></div>
+        <div class="day-topic"><span class="dt-num">03</span><span class="dt-txt">Como identificar desafios reais que podem ser resolvidos com IA</span></div>
+        <div class="day-topic"><span class="dt-num">04</span><span class="dt-txt">Onde a IA gera eficiência e onde ela pode criar risco sistêmico</span></div>
+        <div class="day-topic"><span class="dt-num">05</span><span class="dt-txt">Como separar produtividade real de aumento de volume</span></div>
+        <div class="day-topic"><span class="dt-num">06</span><span class="dt-txt">Como definir prioridades de aplicação por área e função</span></div>
+        <div class="day-topic"><span class="dt-num">07</span><span class="dt-txt">Como pensar IA com visão sistêmica, não apenas individual</span></div>
+      </div>
+    </div>
+    <div class="day-body" id="day-2">
+      <div class="day-info">
+        <div class="day-tag">Camadas 4 · 5</div>
+        <h3>Implementar, governar e operar.</h3>
+        <p class="day-desc">O segundo dia mostra execução: método, playbooks, trilhas, governança, agentes, automações, cases reais e mensuração de eficiência.</p>
+        <div class="day-layers">Como fazer · IA aplicada</div>
+      </div>
+      <div class="day-topics">
+        <div class="day-topic"><span class="dt-num">01</span><span class="dt-txt">Como transformar uso individual de IA em inteligência operacional</span></div>
+        <div class="day-topic"><span class="dt-num">02</span><span class="dt-txt">Como criar playbooks de IA por área</span></div>
+        <div class="day-topic"><span class="dt-num">03</span><span class="dt-txt">Como definir governança sem travar inovação</span></div>
+        <div class="day-topic"><span class="dt-num">04</span><span class="dt-txt">Como estruturar trilhas de adoção por área e função</span></div>
+        <div class="day-topic"><span class="dt-num">05</span><span class="dt-txt">Como medir eficiência real, além da percepção de produtividade</span></div>
+        <div class="day-topic"><span class="dt-num">06</span><span class="dt-txt">Como tirar pilotos de IA do laboratório e levar para a operação</span></div>
+        <div class="day-topic"><span class="dt-num">07</span><span class="dt-txt">Como empresas de tecnologia estão aplicando IA em processos reais</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ APRENDIZADOS ░░ -->
+<section id="aprendizados">
+  <div class="container">
+    <div class="section-hdr center">
+      <span class="eyebrow center">O que você vai aprender</span>
+      <h2>Sair inspirado não é suficiente. <em>Saia com clareza.</em></h2>
+      <p class="section-lead">Em dois dias, você constrói clareza concreta sobre como aplicar IA com método e responsabilidade dentro da própria operação.</p>
+    </div>
+    <div class="apr-grid">
+      <div class="apr-card"><div class="apr-n">01</div><h3>Como avaliar a maturidade do time</h3><p>Entenda o nível atual de pensamento crítico, critério e racional compartilhado antes de acelerar qualquer aplicação.</p></div>
+      <div class="apr-card"><div class="apr-n">02</div><h3>Como identificar problemas reais</h3><p>Aprenda a mapear gargalos operacionais genuínos e a diferenciar desafio real de desejo por novidade tecnológica.</p></div>
+      <div class="apr-card"><div class="apr-n">03</div><h3>Como priorizar com critério</h3><p>Defina onde acelerar, onde apoiar, onde automatizar e onde manter decisão humana com clareza de impacto e risco.</p></div>
+      <div class="apr-card"><div class="apr-n">04</div><h3>Como criar governança sem travar</h3><p>Estruture critérios, trilhas, playbooks e políticas de uso que padronizem sem engessar a inovação.</p></div>
+      <div class="apr-card"><div class="apr-n">05</div><h3>Como medir eficiência real</h3><p>Vá além da percepção de produtividade. Defina métricas que demonstrem impacto operacional mensurável.</p></div>
+      <div class="apr-card"><div class="apr-n">06</div><h3>Como escolher a ferramenta certa</h3><p>A pergunta não é qual IA é mais poderosa. É qual opera melhor dentro do sistema e do problema definido.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ CONVIDADOS ░░ -->
+<section id="convidados">
+  <div class="container">
+    <div class="section-hdr center">
+      <span class="eyebrow center">Convidados</span>
+      <h2>Curadoria por <em>experiência aplicada,</em> não por fama.</h2>
+      <p class="section-lead">O critério não é quem tem mais seguidores. É quem aplicou IA na prática, enfrentou problemas reais, criou processos, errou, ajustou e gerou resultado.</p>
+    </div>
+    <div class="curation-box">
+      <div class="curation-lbl">Critério de curadoria</div>
+      <p>Convidados de empresas que já aplicaram IA em processos reais, com aprendizados sobre implementação, governança, erros, limites e eficiência operacional. Cada palestrante é selecionado pelo que transformou, não pelo que promete.</p>
+      <div class="crit-tags">
+        <span class="crit-tag">Experiência aplicada</span>
+        <span class="crit-tag">Processo transformado</span>
+        <span class="crit-tag">Resultado mensurável</span>
+        <span class="crit-tag">Bastidor real</span>
+        <span class="crit-tag">Aprendizados com erros</span>
+        <span class="crit-tag">Governança na prática</span>
+      </div>
+    </div>
+    <div class="speakers-grid">
+      <div class="spk-ph"><div class="spk-avatar">+</div><div class="spk-name">Em confirmação</div><div class="spk-tag">SP · Tecnologia</div></div>
+      <div class="spk-ph"><div class="spk-avatar">+</div><div class="spk-name">Em confirmação</div><div class="spk-tag">SP · Operações</div></div>
+      <div class="spk-ph"><div class="spk-avatar">+</div><div class="spk-name">Em confirmação</div><div class="spk-tag">SP · Produto</div></div>
+      <div class="spk-ph"><div class="spk-avatar">+</div><div class="spk-name">Em confirmação</div><div class="spk-tag">SP · Inovação</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ MANIFESTO ░░ -->
+<section id="manifesto">
+  <div class="mf-wrap">
+
+    <!-- 1. Label -->
+    <div class="mf-label">Manifesto</div>
+
+    <!-- 2. Headline -->
+    <div class="mf-headline-block">
+      <h2 class="mf-h2">A IA não está apenas<br>aumentando produtividade.</h2>
+      <p class="mf-subhead">Ela também está aumentando o risco de decisões ruins em escala.</p>
+    </div>
+
+    <!-- 3. Contextualização -->
+    <div class="mf-context">
+      <p>Hoje, qualquer pessoa consegue criar sistemas, automações, agentes, dashboards, códigos e processos em poucos minutos.</p>
+      <p>Na superfície, isso parece maturidade. Mas existe uma pergunta anterior:</p>
+      <p class="mf-question">o time está pensando melhor ou apenas produzindo mais rápido?</p>
+    </div>
+
+    <!-- 4. Tensão -->
+    <div class="mf-tension">
+      <p class="mf-tension-lead">A IA tornou fácil acelerar processos.<br>Mas acelerar não é o mesmo que melhorar.</p>
+      <p class="mf-tension-body">Alguns processos precisam ser automatizados. Outros precisam ser simplificados. Outros precisam ser redesenhados. Outros precisam de mais contexto, critério e governança antes de virar sistema, automação ou agente.</p>
+    </div>
+
+    <!-- 5. Exemplos -->
+    <div class="mf-examples">
+      <div class="mf-ex">
+        <div class="mf-ex-title">Sistema bonito não é sistema maduro</div>
+        <p>Um sistema novo pode nascer bonito, conectado e funcional, mas continuar sendo alimentado por informações rasas, registros incompletos e decisões sem contexto.</p>
+      </div>
+      <div class="mf-ex">
+        <div class="mf-ex-title">Automação eficiente pode automatizar o erro</div>
+        <p>Uma automação pode parecer eficiente, mas apenas cobrar tarefas que tratam o efeito, não a causa raiz.</p>
+      </div>
+      <div class="mf-ex">
+        <div class="mf-ex-title">Código rápido também pode criar risco</div>
+        <p>Um código pode funcionar hoje, mas criar brechas de segurança, dependências invisíveis e um débito técnico que talvez nem esteja preparado para corrigir.</p>
+      </div>
+    </div>
+
+    <!-- 6. Pergunta central -->
+    <div class="mf-central-q">
+      <p>A pergunta é simples: você está resolvendo a causa raiz ou apenas automatizando o efeito?</p>
+    </div>
+
+    <!-- 7. Tese -->
+    <div class="mf-tese-block">
+      <p>A próxima etapa da IA nas empresas não será definida por quem usa mais ferramentas. Será definida por quem conseguir alinhar racional, método, governança e execução.</p>
+      <p class="mf-tese-bold">Usar IA é ter acesso. Ter maturidade em IA é ter critério.</p>
+    </div>
+
+    <!-- 8. Fechamento -->
+    <div class="mf-close">
+      <p class="mf-close-dim">IA sem método acelera o caos.</p>
+      <p class="mf-close-strong">IA com método gera <span class="mf-gradient">eficiência real.</span></p>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ PASSAPORTES ░░ -->
+<section id="passaportes">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="pass-header">
+      <div class="pass-brand">
+        <div class="pass-ia">IA</div>
+        <div>
+          <div class="pass-brand-name">Para Negócios</div>
+          <div class="pass-brand-tag">Primeira edição · Porto Alegre · 2026</div>
+        </div>
+      </div>
+      <h2 class="pass-title">Escolha seu <span class="pass-gradient">Passaporte</span></h2>
+      <div class="pass-limited"><span></span>Vagas limitadas por formato<span></span></div>
+    </div>
+
+    <!-- Grid de cards -->
+    <div class="pass-grid">
+
+      <!-- Card 1: Online -->
+      <div class="pass-card pc-online">
+        <div class="pass-type">Formato 01</div>
+        <div class="pass-name">Online</div>
+        <div class="pass-sub">Acompanhe ao vivo de qualquer lugar, com acesso ao conteúdo gravado.</div>
+        <div class="pass-list">
+          <div class="pi"><span class="pi-n">01</span><span class="pi-t">Acesso ao evento</span><span class="pi-ck">Ao vivo</span></div>
+          <div class="pi"><span class="pi-n">02</span><span class="pi-t">Certificado de conclusão digital</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">03</span><span class="pi-t">Material digital exclusivo</span><span class="pi-ck">✓</span></div>
+        </div>
+        <div class="pass-price">
+          <div class="pp-inst-lbl">Ingressos limitados</div>
+          <div class="pp-monthly">12x de</div>
+          <div class="pp-inst">R$ 102</div>
+          <div class="pp-cash">ou R$ 1.075 à vista</div>
+          <a href="#" class="pp-btn">Garantir Online</a>
+        </div>
+      </div>
+
+      <!-- Card 2: Presencial -->
+      <div class="pass-card pc-presencial">
+        <div class="pass-type">Formato 02</div>
+        <div class="pass-name">Presencial</div>
+        <div class="pass-sub">Dois dias presenciais em Porto Alegre, com networking real e imersão completa.</div>
+        <div class="pass-list">
+          <div class="pi"><span class="pi-n">01</span><span class="pi-t">Acesso presencial ao evento</span><span class="pi-ck">2 dias</span></div>
+          <div class="pi"><span class="pi-n">02</span><span class="pi-t">Coffee break</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">03</span><span class="pi-t">Materiais do treinamento</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">04</span><span class="pi-t">Certificado de conclusão</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">05</span><span class="pi-t">Dinâmicas e atividades presenciais</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">06</span><span class="pi-t">Networking com os participantes</span><span class="pi-ck">✓</span></div>
+        </div>
+        <div class="pass-price">
+          <div class="pp-inst-lbl">Ingressos limitados</div>
+          <div class="pp-monthly">12x de</div>
+          <div class="pp-inst">R$ 189</div>
+          <div class="pp-cash">ou R$ 1.998 à vista</div>
+          <a href="#" class="pp-btn">Garantir Presencial</a>
+        </div>
+      </div>
+
+      <!-- Card 3: Imersão (Destaque) -->
+      <div class="pass-card pc-imersao">
+        <div class="pass-badge badge-escolhido">Mais escolhido</div>
+        <div class="pass-type">Formato 03</div>
+        <div class="pass-name">Imersão</div>
+        <div class="pass-sub">Presencial completo com ferramentas, diagnóstico e acompanhamento pós-evento.</div>
+        <div class="pass-list">
+          <div class="pi"><span class="pi-n">01</span><span class="pi-t">Acesso presencial ao evento</span><span class="pi-ck">2 dias</span></div>
+          <div class="pi"><span class="pi-n">02</span><span class="pi-t">Coffee break</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">03</span><span class="pi-t">Materiais do treinamento</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">04</span><span class="pi-t">Certificado de conclusão</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">05</span><span class="pi-t">Dinâmicas e atividades presenciais</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">06</span><span class="pi-t">Networking com os participantes</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">07</span><span class="pi-t">Acesso ao conteúdo gravado</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">08</span><span class="pi-t">Almoço incluso</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">09</span><span class="pi-t">Comunidade privada</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">10</span><span class="pi-t">Playbook de governança</span><span class="pi-ck">✓</span></div>
+        </div>
+        <div class="pass-price">
+          <div class="pp-inst-lbl">Ingressos limitados</div>
+          <div class="pp-monthly">12x de</div>
+          <div class="pp-inst">R$ 247</div>
+          <div class="pp-cash">ou R$ 2.612 à vista</div>
+          <a href="#" class="pp-btn">Garantir Imersão</a>
+        </div>
+      </div>
+
+      <!-- Card 4: Executive -->
+      <div class="pass-card pc-executive">
+        <div class="pass-badge badge-premium">Executive</div>
+        <div class="pass-type">Formato 04</div>
+        <div class="pass-name">Executive</div>
+        <div class="pass-sub">Acesso completo, experiência exclusiva e acompanhamento personalizado pós-evento.</div>
+        <div class="pass-list">
+          <div class="pi"><span class="pi-n">01</span><span class="pi-t">Acesso presencial ao evento</span><span class="pi-ck">2 dias</span></div>
+          <div class="pi"><span class="pi-n">02</span><span class="pi-t">Coffee break</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">03</span><span class="pi-t">Materiais do treinamento</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">04</span><span class="pi-t">Certificado de conclusão</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">05</span><span class="pi-t">Dinâmicas e atividades presenciais</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">06</span><span class="pi-t">Networking com os participantes</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">07</span><span class="pi-t">Acesso ao conteúdo gravado</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">08</span><span class="pi-t">Almoço incluso</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">09</span><span class="pi-t">Comunidade privada</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">10</span><span class="pi-t">Playbook de governança</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">11</span><span class="pi-t">Almoço com convidados especiais</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">12</span><span class="pi-t">Happy hour ao final do treinamento</span><span class="pi-ck">✓</span></div>
+          <div class="pi"><span class="pi-n">13</span><span class="pi-t">Networking exclusivo com convidados</span><span class="pi-ck">✓</span></div>
+        </div>
+        <div class="pass-price">
+          <div class="pp-inst-lbl">Ingressos limitados</div>
+          <div class="pp-monthly">12x de</div>
+          <div class="pp-inst">R$ 342</div>
+          <div class="pp-cash">ou R$ 3.609 à vista</div>
+          <a href="#" class="pp-btn">Garantir Executive</a>
+        </div>
+      </div>
+
+    </div><!-- /pass-grid -->
+
+    <!-- Trust bar -->
+    <div class="pass-trust">
+      <div class="pt-item">
+        <span class="pt-icon">🔒</span>
+        <div><strong>Compra 100% segura</strong><span>Ambiente criptografado</span></div>
+      </div>
+      <div class="pt-item">
+        <span class="pt-icon">🎟️</span>
+        <div><strong>Vagas limitadas</strong><span>Por formato de participação</span></div>
+      </div>
+      <div class="pt-item">
+        <span class="pt-icon">📍</span>
+        <div><strong>Evento presencial</strong><span>Porto Alegre · Sede IBN Life</span></div>
+      </div>
+      <div class="pt-item">
+        <span class="pt-icon">🎓</span>
+        <div><strong>Certificado incluso</strong><span>Em todos os formatos</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-rule"></div>
+
+<!-- ░░ CTA FINAL ░░ -->
+<section id="cta-final">
+  <div class="container">
+    <div class="cta-inner">
+      <span class="eyebrow center" style="display:flex;width:100%;margin-bottom:18px">Primeira edição · Porto Alegre · 2026</span>
+      <h2 style="margin-bottom:13px">A IA já está sendo usada dentro das empresas.</h2>
+      <p>A diferença agora é decidir se esse uso será individual e desorganizado, ou estratégico, com método e eficiência operacional. As vagas da primeira edição são limitadas.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-primary">Quero participar da primeira edição <span class="arrow">→</span></a>
+        <a href="#piramide" class="btn btn-ghost">Entender a metodologia</a>
+      </div>
+      <p class="cta-footnote">Vagas limitadas · Porto Alegre, RS · 2026 · Primeira edição do IA Para Negócios</p>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ FOOTER ░░ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <img src="ia-para-negocios2.png" alt="IA Para Negócios" class="footer-logo">
+      <div class="footer-ibn">
+        <img src="ibn-logo.png" alt="IBN Life">
+      </div>
+      <div class="footer-enky">Plataforma parceira: <a href="#">EnkyAI</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Header scroll
+const hdr = document.getElementById('hdr');
+window.addEventListener('scroll', () => {
+  hdr.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// Pyramid
+const pyrLayers  = document.querySelectorAll('.pyr-layer');
+const pyrPanels  = document.querySelectorAll('.pyr-panel');
+const pyrNavBtns = document.querySelectorAll('.pyr-nav-btn');
+
+function activateLayer(id) {
+  pyrLayers.forEach(l  => l.classList.remove('active'));
+  pyrPanels.forEach(p  => p.classList.remove('active'));
+  pyrNavBtns.forEach(b => b.classList.remove('active'));
+  const l = document.querySelector(`.pyr-layer[data-panel="${id}"]`);
+  const p = document.getElementById(`panel-${id}`);
+  const b = document.querySelector(`.pyr-nav-btn[data-t="${id}"]`);
+  if (l) l.classList.add('active');
+  if (p) p.classList.add('active');
+  if (b) b.classList.add('active');
+}
+
+pyrLayers.forEach(l => {
+  l.addEventListener('click', () => activateLayer(l.dataset.panel));
+  l.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();activateLayer(l.dataset.panel);} });
+});
+pyrNavBtns.forEach(b => b.addEventListener('click', () => activateLayer(b.dataset.t)));
+
+// Day tabs
+const dayTabs   = document.querySelectorAll('.day-tab');
+const dayBodies = document.querySelectorAll('.day-body');
+dayTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    dayTabs.forEach(t  => t.classList.remove('active'));
+    dayBodies.forEach(b => b.classList.remove('active'));
+    tab.classList.add('active');
+    const b = document.getElementById(`day-${tab.dataset.day}`);
+    if (b) b.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

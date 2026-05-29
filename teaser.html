@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA Para Negócios 2026 — Teaser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #04030F;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Manrope', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px;
+  }
+
+  /* ── CARD 1080×1080 ── */
+  .card {
+    width: 1080px;
+    height: 1080px;
+    background: #08061A;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 68px 72px 60px;
+    flex-shrink: 0;
+  }
+
+  /* Glow topo-direita */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -180px; right: -180px;
+    width: 680px; height: 680px;
+    background: radial-gradient(ellipse, rgba(184,40,160,0.22) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* Glow baixo-esquerda */
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: -120px; left: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(ellipse, rgba(90,30,180,0.14) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  /* Noise texture overlay */
+  .noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── TOPO ── */
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 56px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand img { height: 42px; width: auto; display: block; }
+
+  .brand-info { display: flex; flex-direction: column; gap: 3px; }
+
+  .brand-sub {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(200,196,228,0.4);
+  }
+
+  .badge {
+    padding: 8px 20px;
+    border: 1px solid rgba(184,40,160,0.32);
+    border-radius: 40px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(232,64,154,0.85);
+    background: rgba(184,40,160,0.07);
+  }
+
+  /* ── CORPO CENTRAL ── */
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(232,64,154,0.75);
+    margin-bottom: 28px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: rgba(232,64,154,0.5);
+    flex-shrink: 0;
+  }
+
+  .headline {
+    font-size: 66px;
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -0.03em;
+    margin-bottom: 36px;
+  }
+
+  .hl-dim {
+    display: block;
+    color: rgba(242,238,255,0.42);
+    font-weight: 600;
+  }
+
+  .hl-bright {
+    display: block;
+    color: #F2EEFF;
+  }
+
+  .hl-grad {
+    display: block;
+    background: linear-gradient(135deg, #E8409A 0%, #7828CC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .rule {
+    width: 52px; height: 2px;
+    background: linear-gradient(90deg, rgba(184,40,160,0.7), transparent);
+    margin-bottom: 32px;
+  }
+
+  .desc {
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.62;
+    color: rgba(210,206,240,0.62);
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+
+  .desc strong {
+    color: rgba(242,238,255,0.88);
+    font-weight: 600;
+  }
+
+  /* Caixa de pré-venda */
+  .presale {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 28px;
+    background: rgba(184,40,160,0.07);
+    border: 1px solid rgba(184,40,160,0.28);
+    border-left: 3px solid #B828A0;
+    border-radius: 10px;
+    box-shadow: 0 0 24px rgba(184,40,160,0.08);
+  }
+
+  .presale-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #E8409A;
+    box-shadow: 0 0 8px #E8409A;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .presale-text {
+    font-size: 17px;
+    font-weight: 700;
+    color: #F2EEFF;
+    letter-spacing: -0.01em;
+  }
+
+  .presale-sub {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(200,196,228,0.5);
+    margin-top: 3px;
+    display: block;
+  }
+
+  /* ── RODAPÉ ── */
+  .bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .loc .city {
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(242,238,255,0.9);
+    letter-spacing: -0.02em;
+  }
+
+  .loc .venue {
+    font-size: 13px;
+    color: rgba(200,196,228,0.38);
+    margin-top: 5px;
+    letter-spacing: 0.02em;
+  }
+
+  .sp-block { text-align: right; }
+
+  .sp-big {
+    font-size: 21px;
+    font-weight: 800;
+    color: rgba(242,238,255,0.9);
+    letter-spacing: -0.02em;
+    display: block;
+  }
+
+  .sp-small {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(200,196,228,0.38);
+    margin-top: 5px;
+    display: block;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── VERSÃO STORIES 1080×1920 ── */
+  @media (max-width: 600px) {
+    body { padding: 0; }
+    .card {
+      width: 100vw;
+      height: 100vh;
+      padding: 48px 36px 44px;
+    }
+    .headline { font-size: 44px; }
+    .desc { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="noise"></div>
+
+  <!-- TOPO -->
+  <div class="top">
+    <div class="brand">
+      <img src="ia-para-negocios2.png" alt="IA Para Negócios">
+      <div class="brand-info">
+        <span class="brand-sub">Porto Alegre &nbsp;·&nbsp; 2026</span>
+      </div>
+    </div>
+    <div class="badge">Primeira Edição</div>
+  </div>
+
+  <!-- CORPO -->
+  <div class="body">
+
+    <div class="eyebrow">Em breve</div>
+
+    <h1 class="headline">
+      <span class="hl-dim">A maioria dos eventos</span>
+      <span class="hl-dim">de IA fala sobre o futuro.</span>
+      <span class="hl-bright">Este vai mostrar</span>
+      <span class="hl-grad">o que já está acontecendo.</span>
+    </h1>
+
+    <div class="rule"></div>
+
+    <p class="desc">
+      Quem já implementou IA em <strong>grandes empresas</strong> vai mostrar
+      na prática: eficiência real, <strong>gargalos invisíveis</strong>
+      e zonas cegas que podem estar afetando sua operação agora.
+    </p>
+
+    <div class="presale">
+      <div class="presale-dot"></div>
+      <div>
+        <div class="presale-text">Pré-venda aberta · Condição de lançamento</div>
+        <span class="presale-sub">Vagas limitadas · Data a confirmar em breve</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RODAPÉ -->
+  <div class="bottom">
+    <div class="loc">
+      <div class="city">Porto Alegre &nbsp;·&nbsp; Agosto 2026</div>
+      <div class="venue">Sede do IBN Life &nbsp;·&nbsp; 2 dias</div>
+    </div>
+    <div class="sp-block">
+      <span class="sp-big">Um evento nível São Paulo.</span>
+      <span class="sp-small">Aqui no Sul.</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
